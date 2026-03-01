@@ -1,0 +1,59 @@
+.track-page {
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: var(--text);
+}
+
+.track-form {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 600px;
+  margin: 40px auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.track-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grievance-card {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.status-badge, .urgency-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status-badge {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.urgency-badge {
+  background: var(--danger);
+  color: #ffffff;
+}

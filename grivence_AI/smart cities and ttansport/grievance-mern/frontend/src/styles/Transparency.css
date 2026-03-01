@@ -1,0 +1,355 @@
+/* Transparency Page - Dark Theme Overrides */
+
+.transparency-page {
+  padding: 30px;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+.transparency-page h1 {
+  color: var(--text);
+  margin-bottom: 10px;
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 1.1em;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+.leaderboard {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  margin-bottom: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 50px 200px 1fr 1fr 1fr 150px;
+  gap: 20px;
+  padding: 20px 25px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(30,30,30,0.6));
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85em;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 50px 200px 1fr 1fr 1fr 150px;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.leaderboard-row:hover {
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.rank-col {
+  text-align: center;
+}
+
+.rank-badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 50%;
+  font-weight: 800;
+  color: #000;
+  min-width: 44px;
+  text-align: center;
+  font-size: 0.95em;
+  border: 2px solid white;
+}
+
+.rank-1 {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  border: 2px solid white;
+}
+
+.rank-2 {
+  background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(192, 192, 192, 0.3);
+  border: 2px solid white;
+}
+
+.rank-3 {
+  background: linear-gradient(135deg, #cd7f32 0%, #e8a76a 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(205, 127, 50, 0.3);
+  border: 2px solid white;
+}
+
+.dept-col {
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+}
+
+.stat-col {
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+
+.stat-col.resolved {
+  color: white;
+  font-weight: 700;
+}
+
+.stat-col.pending {
+  color: white;
+  font-weight: 700;
+}
+
+.rate-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rate-bar-container {
+  flex: 1;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.rate-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff00 0%, #00cc00 100%);
+  transition: width 0.5s ease;
+  border-radius: 4px;
+}
+
+.rate-text {
+  font-weight: 600;
+  color: white;
+  min-width: 45px;
+  text-align: right;
+  font-size: 0.95em;
+}
+
+.transparency-info {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+.transparency-info h3 {
+  color: var(--text);
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.transparency-info p {
+  color: var(--text-muted);
+  font-size: 0.95em;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.resolved-b {
+  background-color: #00cc00;
+  color: white;
+  border: 2px solid white;
+}
+
+.pending-b {
+  background-color: #ff6b6b;
+  color: white;
+  border: 2px solid white;
+}
+
+.rate-b {
+  background-color: #667eea;
+  color: white;
+  border: 2px solid white;
+}
+
+@media (max-width: 1024px) {
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 40px 150px 1fr 1fr 1fr 120px;
+    gap: 15px;
+  }
+
+  .dept-col {
+    font-size: 0.95em;
+  }
+
+  .stat-col {
+    font-size: 0.9em;
+  }
+
+  .rate-text {
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 768px) {
+  .transparency-page {
+    padding: 20px;
+  }
+
+  .transparency-page h1 {
+    font-size: 1.8em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 0.95em;
+    margin-bottom: 20px;
+  }
+
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 35px 120px 1fr 1fr 1fr 100px;
+    gap: 10px;
+    padding: 12px 15px;
+  }
+
+  .rank-badge {
+    padding: 6px;
+    font-size: 0.8em;
+    min-width: 35px;
+  }
+
+  .dept-col {
+    font-size: 0.85em;
+  }
+
+  .stat-col {
+    font-size: 0.75em;
+  }
+
+  .rate-bar-container {
+    min-width: 40px;
+  }
+
+  .rate-text {
+    font-size: 0.75em;
+    min-width: 35px;
+  }
+
+  .transparency-info {
+    padding: 15px;
+  }
+
+  .transparency-info h3 {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .transparency-info p {
+    font-size: 0.85em;
+    margin: 6px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .transparency-page {
+    padding: 15px;
+  }
+
+  .transparency-page h1 {
+    font-size: 1.4em;
+  }
+
+  .subtitle {
+    font-size: 0.85em;
+    margin-bottom: 15px;
+  }
+
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 30px 100px 1fr 1fr 1fr 80px;
+    gap: 5px;
+    padding: 10px 12px;
+    font-size: 0.75em;
+  }
+
+  .rank-badge {
+    padding: 4px;
+    font-size: 0.7em;
+    min-width: 30px;
+  }
+
+  .dept-col {
+    font-size: 0.75em;
+  }
+
+  .stat-col {
+    font-size: 0.65em;
+  }
+
+  .rate-bar {
+    height: 6px;
+  }
+
+  .rate-text {
+    font-size: 0.65em;
+    min-width: 30px;
+  }
+
+  .transparency-info {
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .transparency-info h3 {
+    font-size: 0.9em;
+  }
+
+  .transparency-info p {
+    font-size: 0.75em;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 0.65em;
+    padding: 4px 8px;
+  }
+}

@@ -1,0 +1,36 @@
+.submit-grievance-page {
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: var(--text);
+}
+
+.form-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-container button {
+  margin-top: 10px;
+}
+
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,124 @@
+.escalations-page {
+  padding: 30px;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+.escalations-page h1 {
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 2.5em;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  font-size: 1.1em;
+}
+
+.escalations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.escalation-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 25px;
+  border: 2px solid #ff4757;
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.escalation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.escalation-level {
+  background: #ff4757;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+.escalation-id {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.escalation-card h3 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.escalation-details p {
+  color: white;
+  margin: 8px 0;
+  font-size: 0.95em;
+}
+
+.escalation-history {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.escalation-history h4 {
+  color: white;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.history-item {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 0.9em;
+}
+
+.reason {
+  color: #ffa500;
+  font-style: italic;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: 600;
+  border: 2px solid white;
+}
+
+.priority-critical {
+  background: #8b0000;
+  color: white;
+}
+
+.priority-high {
+  background: #dc3545;
+  color: white;
+}
+
+.priority-medium {
+  background: #ffc107;
+  color: #000;
+}
+
+.priority-low {
+  background: #28a745;
+  color: white;
+}
