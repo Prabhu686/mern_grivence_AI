@@ -1,0 +1,92 @@
+.analytics-page {
+  padding: 30px;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+.analytics-page h1 {
+  color: var(--text);
+  margin-bottom: 10px;
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 1.1em;
+  margin-bottom: 30px;
+}
+
+.total-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.total-card h2 {
+  color: white;
+  margin: 0 0 15px 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.total-value {
+  font-size: 4em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 25px;
+}
+
+.chart-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.chart-card h3 {
+  color: white;
+  margin: 0 0 20px 0;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-page {
+    padding: 20px;
+  }
+
+  .analytics-page h1 {
+    font-size: 1.8em;
+  }
+
+  .total-value {
+    font-size: 3em;
+  }
+
+  .chart-card {
+    padding: 15px;
+  }
+}

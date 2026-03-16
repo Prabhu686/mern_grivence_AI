@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Notifications from '../components/Notifications';
 import '../styles/AdminDashboard.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -20,6 +21,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
+  const [filterDepartment, setFilterDepartment] = useState('All');
   const [selectedGrievance, setSelectedGrievance] = useState(null);
   const [newStatus, setNewStatus] = useState('');
   const [newPriority, setNewPriority] = useState('');
@@ -66,19 +68,28 @@ const AdminDashboard = () => {
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    filterGrievances(term, filterStatus);
+    filterGrievances(term, filterStatus, filterDepartment);
   };
 
   const handleStatusFilter = (status) => {
     setFilterStatus(status);
-    filterGrievances(searchTerm, status);
+    filterGrievances(searchTerm, status, filterDepartment);
   };
 
-  const filterGrievances = (search, status) => {
+  const handleDepartmentFilter = (dept) => {
+    setFilterDepartment(dept);
+    filterGrievances(searchTerm, filterStatus, dept);
+  };
+
+  const filterGrievances = (search, status, department) => {
     let filtered = grievances;
 
     if (status !== 'All') {
       filtered = filtered.filter(g => g.status === status);
+    }
+
+    if (department !== 'All') {
+      filtered = filtered.filter(g => g.department === department);
     }
 
     if (search) {
@@ -121,6 +132,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <Notifications />
       <h1>Admin Dashboard</h1>
       
       {error && <div className="alert alert-error">{error}</div>}
@@ -159,6 +171,24 @@ const AdminDashboard = () => {
               </button>
             ))}
           </div>
+          <div className="department-filter">
+            <label>Department:</label>
+            <select 
+              value={filterDepartment} 
+              onChange={(e) => handleDepartmentFilter(e.target.value)}
+              className="department-select"
+            >
+              <option value="All">All Departments</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Roads & Transport">Roads & Transport</option>
+              <option value="Water & Sanitation">Water & Sanitation</option>
+              <option value="Public Safety">Public Safety</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="Environment">Environment</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
 
         {/* Grievances Table */}
@@ -181,7 +211,7 @@ const AdminDashboard = () => {
               {filteredGrievances.length > 0 ? (
                 filteredGrievances.map(grievance => (
                   <tr key={grievance._id}>
-                    <td className="id-cell">{grievance._id.substring(0, 8)}...</td>
+                    <td className="id-cell">#{grievance.id}</td>
                     <td>
                       <span className={`priority-badge priority-${grievance.priority?.toLowerCase()}`}>
                         {grievance.priority}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Student Dashboard</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text-main: #1e293b;
+            --accent: #a855f7;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- LOGIN OVERLAY --- */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 25px rgba(0,0,0,0.2);
+            width: 320px;
+        }
+
+        /* --- MAIN APP LAYOUT --- */
+        #main-app {
+            display: none; /* Hidden until login */
+            width: 95%;
+            max-width: 1000px;
+            padding: 40px 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* --- TIMETABLE STYLES --- */
+        .timetable-container {
+            overflow-x: auto;
+        }
+
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr); /* Time + 5 Days */
+            gap: 5px;
+            min-width: 500px;
+        }
+
+        .time-label, .day-label {
+            font-weight: bold;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+        }
+
+        .slot {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            min-height: 50px;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .slot:hover { background: #f1f5f9; border-color: var(--primary); }
+
+        .slot.filled {
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: 500;
+        }
+
+        /* --- TASK STYLES --- */
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        #fill { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        ul { list-style: none; padding: 0; }
+        li { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px; 
+            background: #f8fafc; 
+            margin-bottom: 5px; 
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Welcome Back</h2>
+            <p>Please enter your name to start</p>
+            <input type="text" id="user-name" placeholder="Student Name">
+            <button onclick="handleLogin()">Enter Dashboard</button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <header style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <h1 id="welcome-text">Student Dashboard</h1>
+            <button onclick="logout()" style="width: auto; padding: 5px 15px; background: #94a3b8;">Logout</button>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Daily Tasks</h3>
+                <div class="progress-bar"><div id="fill"></div></div>
+                <input type="text" id="task-in" placeholder="New assignment...">
+                <button onclick="addTask()">Add Task</button>
+                <ul id="task-list"></ul>
+            </div>
+
+            <div class="card">
+                <h3>Weekly Timetable</h3>
+                <p style="font-size: 0.8rem; color: #64748b;">Click a slot to set a class</p>
+                <div class="timetable-container">
+                    <div class="timetable-grid" id="tt-grid">
+                        <div class="time-label">Time</div>
+                        <div class="day-label">Mon</div>
+                        <div class="day-label">Tue</div>
+                        <div class="day-label">Wed</div>
+                        <div class="day-label">Thu</div>
+                        <div class="day-label">Fri</div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- APP STATE ---
+        let currentUser = localStorage.getItem('activeUser');
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let timetable = JSON.parse(localStorage.getItem('timetable')) || {};
+
+        // --- LOGIN LOGIC ---
+        function handleLogin() {
+            const name = document.getElementById('user-name').value;
+            if(!name) return alert("Please enter a name");
+            localStorage.setItem('activeUser', name);
+            location.reload();
+        }
+
+        function logout() {
+            localStorage.removeItem('activeUser');
+            location.reload();
+        }
+
+        // --- TIMETABLE LOGIC ---
+        function initTimetable() {
+            const grid = document.getElementById('tt-grid');
+            const times = ["08:00", "10:00", "12:00", "14:00", "16:00"];
+            
+            times.forEach(time => {
+                const label = document.createElement('div');
+                label.className = 'time-label';
+                label.innerText = time;
+                grid.appendChild(label);
+
+                for(let day=0; day<5; day++) {
+                    const slotId = `${time}-${day}`;
+                    const slot = document.createElement('div');
+                    slot.className = `slot ${timetable[slotId] ? 'filled' : ''}`;
+                    slot.innerText = timetable[slotId] || '';
+                    slot.onclick = () => editSlot(slotId);
+                    grid.appendChild(slot);
+                }
+            });
+        }
+
+        function editSlot(id) {
+            const current = timetable[id] || "";
+            const subject = prompt("Enter Subject/Class Name:", current);
+            if (subject !== null) {
+                if (subject === "") delete timetable[id];
+                else timetable[id] = subject;
+                localStorage.setItem('timetable', JSON.stringify(timetable));
+                location.reload();
+            }
+        }
+
+        // --- TASK LOGIC ---
+        function addTask() {
+            const val = document.getElementById('task-in').value;
+            if(!val) return;
+            tasks.push({ text: val, done: false });
+            document.getElementById('task-in').value = '';
+            save();
+        }
+
+        function toggleTask(i) {
+            tasks[i].done = !tasks[i].done;
+            save();
+        }
+
+        function deleteTask(i) {
+            tasks.splice(i, 1);
+            save();
+        }
+
+        function save() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            render();
+        }
+
+        function render() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            tasks.forEach((t, i) => {
+                list.innerHTML += `
+                    <li>
+                        <span style="${t.done ? 'text-decoration:line-through' : ''}">${t.text}</span>
+                        <div>
+                            <button onclick="toggleTask(${i})" style="width:auto; padding:2px 8px; background:#22c55e;">✓</button>
+                            <button onclick="deleteTask(${i})" style="width:auto; padding:2px 8px; background:#ef4444;">X</button>
+                        </div>
+                    </li>`;
+            });
+            const percent = tasks.length ? (tasks.filter(t => t.done).length / tasks.length) * 100 : 0;
+            document.getElementById('fill').style.width = percent + '%';
+        }
+
+        // --- INITIALIZE ---
+        if(currentUser) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('welcome-text').innerText = `Hello, ${currentUser}`;
+            render();
+            initTimetable();
+        }
+    </script>
+</body>
+</html>

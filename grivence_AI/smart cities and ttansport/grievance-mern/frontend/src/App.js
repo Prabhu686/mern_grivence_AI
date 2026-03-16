@@ -13,6 +13,10 @@ import CitizenRegister from './pages/CitizenRegister';
 import { AdminPanel, Analytics, Reports, Transparency, GrievanceDetails } from './pages/index';
 import Escalations from './pages/Escalations';
 import Departments from './pages/Departments';
+import AIInsights from './pages/AIInsights';
+import CitizenDashboard from './pages/CitizenDashboard';
+import GrievanceComments from './pages/GrievanceComments';
+import AdvancedAnalytics from './pages/AdvancedAnalytics';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -28,7 +32,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/submit" element={<SubmitGrievance />} />
@@ -44,7 +48,11 @@ function App() {
         <Route path="/transparency" element={<Transparency />} />
         <Route path="/escalations" element={<Escalations />} />
         <Route path="/departments" element={<Departments />} />
+        <Route path="/ai-insights" element={<AIInsights />} />
+        <Route path="/citizen-dashboard" element={<CitizenDashboard />} />
         <Route path="/grievance/:id" element={<GrievanceDetails />} />
+        <Route path="/grievance/:id/comments" element={<GrievanceComments />} />
+        <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
       </Routes>
     </Router>
   );

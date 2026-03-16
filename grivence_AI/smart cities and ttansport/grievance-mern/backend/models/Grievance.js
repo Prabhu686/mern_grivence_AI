@@ -36,6 +36,20 @@ const grievanceSchema = new mongoose.Schema({
     enum: ['neutral', 'frustrated', 'angry', 'distress', 'satisfied'],
     default: 'neutral'
   },
+  // AI Analysis Fields (NEW - Optional)
+  aiSummary: { type: String },
+  aiPriority: { type: String, enum: ['Low', 'Medium', 'High', 'Critical'] },
+  aiCategory: { type: String },
+  aiImpactScore: { type: Number, min: 1, max: 10 },
+  aiAnalyzedAt: { type: Date },
+  // Spam/Fake Detection Fields
+  isLegitimate: { type: Boolean, default: true },
+  verificationStatus: { type: String, enum: ['Verified', 'Suspicious - Needs Review', 'Flagged as Spam'], default: 'Verified' },
+  verificationConfidence: { type: String, enum: ['Low', 'Medium', 'High'], default: 'High' },
+  legitimacyScore: { type: Number, default: 0 },
+  spamScore: { type: Number, default: 0 },
+  verificationFlags: [String],
+  verifiedAt: { type: Date },
   citizenId: mongoose.Schema.Types.ObjectId,
   citizenName: String,
   citizenEmail: String,

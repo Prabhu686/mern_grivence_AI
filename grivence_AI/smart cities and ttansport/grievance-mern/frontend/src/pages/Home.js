@@ -36,6 +36,8 @@ function Home() {
         <Link to="/reports">Reports</Link>
         <Link to="/escalations">Escalations</Link>
         <Link to="/departments">Departments</Link>
+        <Link to="/ai-insights">AI Insights</Link>
+        <Link to="/advanced-analytics">Analytics</Link>
       </nav>
 
       <main className="container">

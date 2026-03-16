@@ -19,15 +19,18 @@ function SubmitGrievance() {
   const [resolveTime, setResolveTime] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [images, setImages] = useState([]);
+  const [showMap, setShowMap] = useState(false);
+  const [mapCoords, setMapCoords] = useState({ lat: 11.0168, lng: 76.9558 }); // Karpagam College default
 
   const departmentResolveTime = {
-    'Water & Sanitation': '24-48 hours',
-    'Roads & Transport': '48-72 hours',
-    'Electricity': '12-24 hours',
-    'Healthcare': '6-12 hours',
-    'Education': '72 hours',
-    'Public Safety': '2-6 hours',
-    'Environment': '48 hours',
+    'Public Safety': '1-6 hours',
+    'Healthcare': '1-6 hours',
+    'Electricity': '6-12 hours',
+    'Water & Sanitation': '12-24 hours',
+    'Roads & Transport': '24-48 hours',
+    'Environment': '24-48 hours',
+    'Education': '48-72 hours',
     'Administration': '24-48 hours'
   };
 
@@ -48,23 +51,27 @@ function SubmitGrievance() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognitionInstance = new SpeechRecognition();
     
-    recognitionInstance.continuous = true;
-    recognitionInstance.interimResults = true;
+    recognitionInstance.continuous = false;
+    recognitionInstance.interimResults = false;
     recognitionInstance.lang = 'en-US';
 
     recognitionInstance.onresult = (event) => {
-      let transcript = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript;
-      }
+      const transcript = event.results[0][0].transcript;
       setFormData(prev => ({
         ...prev,
-        description: prev.description + ' ' + transcript
+        description: prev.description ? prev.description + ' ' + transcript : transcript
       }));
     };
 
     recognitionInstance.onerror = (event) => {
-      setError('Voice recognition error: ' + event.error);
+      console.error('Speech recognition error:', event.error);
+      if (event.error === 'no-speech') {
+        setError('No speech detected. Please try again.');
+      } else if (event.error === 'not-allowed') {
+        setError('Microphone access denied. Please allow microphone access.');
+      } else {
+        setError('Voice recognition error: ' + event.error);
+      }
       setIsRecording(false);
     };
 
@@ -72,9 +79,15 @@ function SubmitGrievance() {
       setIsRecording(false);
     };
 
-    recognitionInstance.start();
-    setRecognition(recognitionInstance);
-    setIsRecording(true);
+    try {
+      recognitionInstance.start();
+      setRecognition(recognitionInstance);
+      setIsRecording(true);
+      setError('');
+    } catch (err) {
+      setError('Failed to start voice recognition');
+      setIsRecording(false);
+    }
   };
 
   const stopVoiceToText = () => {
@@ -91,8 +104,13 @@ function SubmitGrievance() {
     setSuccess('');
 
     try {
-      const payload = { ...formData };
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/grievances`, payload);
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach(key => formDataToSend.append(key, formData[key]));
+      images.forEach(img => formDataToSend.append('images', img));
+      
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/grievances`, formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
 
       const dept = response.data.grievance.department;
       const autoPriority = response.data.grievance.priority || response.data.grievance.urgency;
@@ -108,6 +126,7 @@ function SubmitGrievance() {
         citizenEmail: '',
         citizenPhone: ''
       });
+      setImages([]);
 
       setTimeout(() => {
         setSuccess('');
@@ -193,35 +212,104 @@ function SubmitGrievance() {
                 placeholder="Where is the issue?"
                 required
               />
-              <button
-                type="button"
-                className="btn btn-secondary mt-10"
-                onClick={() => {
-                  if (!navigator.geolocation) return setError('Geolocation not supported');
-                  setLoading(true);
-                  navigator.geolocation.getCurrentPosition(async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    
-                    try {
-                      // Use reverse geocoding to get address
-                      const response = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
-                      );
-                      const data = await response.json();
-                      const address = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-                      setFormData(prev => ({ ...prev, location: address }));
-                    } catch (err) {
-                      setFormData(prev => ({ ...prev, location: `${lat.toFixed(6)}, ${lng.toFixed(6)}` }));
-                    } finally {
-                      setLoading(false);
+              <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    if (!navigator.geolocation) {
+                      setError('Geolocation not supported');
+                      return;
                     }
-                  }, (err) => {
-                    setError('Geolocation permission denied');
-                    setLoading(false);
-                  });
-                }}
-              >Use my current location</button>
+                    setLoading(true);
+                    navigator.geolocation.getCurrentPosition(async (pos) => {
+                      const lat = pos.coords.latitude;
+                      const lng = pos.coords.longitude;
+                      setMapCoords({ lat, lng });
+                      
+                      try {
+                        const response = await fetch(
+                          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+                          { headers: { 'User-Agent': 'GrievanceApp/1.0' } }
+                        );
+                        const data = await response.json();
+                        
+                        let address = '';
+                        if (data.address) {
+                          const addr = data.address;
+                          const parts = [];
+                          
+                          // Priority: Building/Institution name first
+                          const placeName = addr.building || addr.university || addr.college || addr.amenity;
+                          if (placeName) {
+                            parts.push(placeName);
+                          }
+                          
+                          // Add road/street
+                          if (addr.road) {
+                            parts.push(addr.road);
+                          }
+                          
+                          // Add locality
+                          const locality = addr.neighbourhood || addr.suburb || addr.village;
+                          if (locality) {
+                            parts.push(locality);
+                          }
+                          
+                          // Add city
+                          const city = addr.city || addr.town || addr.municipality;
+                          if (city) {
+                            parts.push(city);
+                          }
+                          
+                          // Add state and postal
+                          if (addr.state) parts.push(addr.state);
+                          if (addr.postcode) parts.push(addr.postcode);
+                          
+                          address = parts.join(', ');
+                        }
+                        
+                        // If no proper address, use display_name or coordinates
+                        if (!address || address.length < 10) {
+                          address = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        }
+                        
+                        setFormData(prev => ({ ...prev, location: address }));
+                      } catch (err) {
+                        setFormData(prev => ({ ...prev, location: `${lat.toFixed(6)}, ${lng.toFixed(6)}` }));
+                      }
+                      setLoading(false);
+                    }, (err) => {
+                      setError('Failed to get location');
+                      setLoading(false);
+                    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+                  }}
+                >Use My Location</button>
+                
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowMap(!showMap)}
+                >{showMap ? 'Hide' : 'Show'} Map</button>
+              </div>
+              
+              {showMap && (
+                <div style={{marginTop: '15px', border: '2px solid rgba(255,255,255,0.2)', borderRadius: '8px', overflow: 'hidden'}}>
+                  <iframe
+                    width="100%"
+                    height="400"
+                    frameBorder="0"
+                    style={{border: 0}}
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${mapCoords.lng-0.01},${mapCoords.lat-0.01},${mapCoords.lng+0.01},${mapCoords.lat+0.01}&layer=mapnik&marker=${mapCoords.lat},${mapCoords.lng}`}
+                    allowFullScreen
+                  ></iframe>
+                  <div style={{padding: '10px', background: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '0.9em'}}>
+                    <strong>Current Location:</strong> {mapCoords.lat.toFixed(6)}, {mapCoords.lng.toFixed(6)}
+                    <br/>
+                    <small>Click "Use GPS" to update your current location on the map</small>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -261,6 +349,24 @@ function SubmitGrievance() {
                 placeholder="Your phone number"
                 required
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="images">Attach Images (Optional)</label>
+              <input
+                type="file"
+                id="images"
+                accept="image/*"
+                multiple
+                onChange={(e) => setImages(Array.from(e.target.files))}
+              />
+              {images.length > 0 && (
+                <div className="image-preview">
+                  {images.map((img, idx) => (
+                    <span key={idx} className="image-name">{img.name}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             <button type="submit" className="btn btn-primary" disabled={loading}>

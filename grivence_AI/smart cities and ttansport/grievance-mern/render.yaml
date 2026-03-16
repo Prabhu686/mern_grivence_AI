@@ -1,0 +1,49 @@
+services:
+  # ── Main Backend (Node.js) + React Frontend ──────────────────────────────
+  - type: web
+    name: grievance-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false          # set this in Render dashboard
+      - key: JWT_SECRET
+        sync: false          # set this in Render dashboard
+      - key: ML_SERVICE_URL
+        fromService:
+          name: grievance-ml-service
+          type: web
+          property: host
+      - key: AI_SERVICE_URL
+        fromService:
+          name: grievance-location-service
+          type: web
+          property: host
+
+  # ── ML / Classification Python Service ───────────────────────────────────
+  - type: web
+    name: grievance-ml-service
+    runtime: python
+    rootDir: python_services/ml_service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PORT
+        value: 5002
+
+  # ── Location Python Service ───────────────────────────────────────────────
+  - type: web
+    name: grievance-location-service
+    runtime: python
+    rootDir: python_services/location_service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PORT
+        value: 5001

@@ -159,6 +159,42 @@
   flex-wrap: wrap;
 }
 
+.department-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.department-filter label {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.department-select {
+  padding: 8px 16px;
+  border: 2px solid #e0e0e0;
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.department-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.department-select:hover {
+  border-color: #667eea;
+  background: #fff5f9;
+}
+
 .filter-btn {
   padding: 8px 16px;
   border: 2px solid #e0e0e0;
