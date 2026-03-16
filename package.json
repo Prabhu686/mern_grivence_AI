@@ -1,0 +1,7 @@
+{
+  "name": "mern-grivence-ai",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm install --prefix \"grivence_AI/smart cities and ttansport/grievance-mern/frontend\" && npm run build --prefix \"grivence_AI/smart cities and ttansport/grievance-mern/frontend\""
+  }
+}
