@@ -3,7 +3,7 @@ services:
   - type: web
     name: grievance-backend
     runtime: node
-    rootDir: backend
+    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/backend
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -12,9 +12,9 @@ services:
       - key: PORT
         value: 5000
       - key: MONGODB_URI
-        sync: false          # set this in Render dashboard
+        sync: false
       - key: JWT_SECRET
-        sync: false          # set this in Render dashboard
+        sync: false
       - key: ML_SERVICE_URL
         fromService:
           name: grievance-ml-service
@@ -30,7 +30,7 @@ services:
   - type: web
     name: grievance-ml-service
     runtime: python
-    rootDir: python_services/ml_service
+    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/python_services/ml_service
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
@@ -41,7 +41,7 @@ services:
   - type: web
     name: grievance-location-service
     runtime: python
-    rootDir: python_services/location_service
+    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/python_services/location_service
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:

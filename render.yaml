@@ -4,7 +4,7 @@ services:
     name: grievance-backend
     runtime: node
     rootDir: grivence_AI/smart cities and ttansport/grievance-mern/backend
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && cd ../frontend && npm install && npm run build && cd ../backend
     startCommand: npm start
     envVars:
       - key: NODE_ENV
