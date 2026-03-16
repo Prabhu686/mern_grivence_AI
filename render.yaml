@@ -1,49 +1,14 @@
 services:
-  # ── Main Backend (Node.js) + React Frontend ──────────────────────────────
   - type: web
     name: grievance-backend
     runtime: node
-    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/backend
-    buildCommand: npm install && cd ../frontend && npm install && npm run build && cd ../backend
-    startCommand: npm start
+    rootDir: "grivence_AI/smart cities and ttansport/grievance-mern/backend"
+    buildCommand: "cd ../frontend && npm install && npm run build && cd ../backend && npm install"
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5000
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         sync: false
-      - key: ML_SERVICE_URL
-        fromService:
-          name: grievance-ml-service
-          type: web
-          property: host
-      - key: AI_SERVICE_URL
-        fromService:
-          name: grievance-location-service
-          type: web
-          property: host
-
-  # ── ML / Classification Python Service ───────────────────────────────────
-  - type: web
-    name: grievance-ml-service
-    runtime: python
-    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/python_services/ml_service
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    envVars:
-      - key: PORT
-        value: 5002
-
-  # ── Location Python Service ───────────────────────────────────────────────
-  - type: web
-    name: grievance-location-service
-    runtime: python
-    rootDir: grivence_AI/smart cities and ttansport/grievance-mern/python_services/location_service
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    envVars:
-      - key: PORT
-        value: 5001
