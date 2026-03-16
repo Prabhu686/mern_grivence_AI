@@ -17,7 +17,7 @@ function GrievanceComments() {
 
   const fetchGrievance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/grievances/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/grievances/${id}`);
       setGrievance(response.data);
       setLoading(false);
     } catch (error) {
@@ -34,7 +34,7 @@ function GrievanceComments() {
     
     try {
       setSubmitting(true);
-      await axios.post(`http://localhost:5000/api/grievances/${id}/comments`, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/grievances/${id}/comments`, {
         user: userName,
         text: comment
       });
@@ -69,7 +69,7 @@ function GrievanceComments() {
             <strong>Attachments:</strong>
             <div className="image-grid">
               {grievance.attachments.map((img, idx) => (
-                <img key={idx} src={`http://localhost:5000/${img}`} alt={`Attachment ${idx + 1}`} />
+                <img key={idx} src={`${process.env.REACT_APP_API_URL.replace('/api','')}/${img}`} alt={`Attachment ${idx + 1}`} />
               ))}
             </div>
           </div>

@@ -19,7 +19,7 @@ function CitizenDashboard() {
 
   const fetchGrievances = async (email) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/grievances/citizen/my-grievances?email=${email}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/grievances/citizen/my-grievances?email=${email}`);
       setGrievances(response.data);
       setLoading(false);
     } catch (error) {

@@ -12,7 +12,7 @@ function AIInsights() {
 
   const fetchInsights = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/grievances/ai/insights');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/grievances/ai/insights`);
       setInsights(response.data);
       setLoading(false);
     } catch (error) {

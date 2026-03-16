@@ -13,7 +13,7 @@ function Notifications() {
 
   const fetchEscalatedGrievances = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/grievances?status=Escalated');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/grievances?status=Escalated`);
       setNotifications(response.data);
     } catch (error) {
       console.error('Error fetching notifications:', error);
