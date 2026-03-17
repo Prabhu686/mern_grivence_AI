@@ -62,11 +62,10 @@ exports.createGrievance = async (req, res) => {
     try {
       const aiAnalysis = analyzeComplaint(title, description, location);
       Object.assign(grievance, aiAnalysis);
-      
-      // Use AI-detected category as department if more accurate
-      if (aiAnalysis.aiCategory && aiAnalysis.aiCategory !== 'Administration') {
-        grievance.department = aiAnalysis.aiCategory;
-      }
+      // Always use AI category as department (overrides ML service default)
+      grievance.department = aiAnalysis.aiCategory || 'Administration';
+      grievance.urgency = aiAnalysis.aiPriority || grievance.urgency;
+      grievance.priority = aiAnalysis.aiPriority || grievance.priority;
     } catch (aiError) {
       console.log('AI analysis failed, continuing without it:', aiError.message);
     }
