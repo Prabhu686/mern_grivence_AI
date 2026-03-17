@@ -5,40 +5,6 @@ import '../styles/Home.css';
 function Home() {
   return (
     <div className="home-page">
-      <header className="header" style={{position: 'relative'}}>
-        <div style={{position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px'}}>
-          {localStorage.getItem('token') ? (
-            <button 
-              onClick={() => {
-                localStorage.clear();
-                window.location.href = '/';
-              }}
-              className="btn btn-secondary"
-              style={{padding: '8px 16px'}}
-            >
-              Logout
-            </button>
-          ) : (
-            <>
-              <Link to="/admin-login" className="btn btn-secondary" style={{padding: '8px 16px'}}>Admin Login</Link>
-              <Link to="/citizen-login" className="btn btn-secondary" style={{padding: '8px 16px'}}>Citizen Login</Link>
-            </>
-          )}
-        </div>
-        <h1>Smart City Grievance System</h1>
-        <p>AI-Powered Grievance Management for Better Governance</p>
-      </header>
-
-      <nav className="nav">
-        <Link to="/submit">Submit Grievance</Link>
-        <Link to="/track">Track Status</Link>
-        <Link to="/transparency">Transparency</Link>
-        <Link to="/reports">Reports</Link>
-        <Link to="/escalations">Escalations</Link>
-        <Link to="/departments">Departments</Link>
-        <Link to="/ai-insights">AI Insights</Link>
-        <Link to="/advanced-analytics">Analytics</Link>
-      </nav>
 
       <main className="container">
         <div className="main-content">

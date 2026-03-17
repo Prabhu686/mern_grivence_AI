@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -10,37 +9,56 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
+    window.location.reload();
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">🏙️ Smart City</Link>
-      </div>
-      <div className="navbar-links">
+    <>
+      <header className="header" style={{ position: 'relative' }}>
+        <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px' }}>
+          {token ? (
+            <>
+              {userRole !== 'admin' && (
+                <Link to="/citizen-dashboard" className="btn btn-secondary" style={{ padding: '8px 16px' }}>
+                  My Grievances
+                </Link>
+              )}
+              {userRole === 'admin' && (
+                <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 16px' }}>
+                  Admin Panel
+                </Link>
+              )}
+              <button
+                onClick={handleLogout}
+                className="btn btn-secondary"
+                style={{ padding: '8px 16px' }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/admin-login" className="btn btn-secondary" style={{ padding: '8px 16px' }}>Admin Login</Link>
+              <Link to="/citizen-login" className="btn btn-secondary" style={{ padding: '8px 16px' }}>Citizen Login</Link>
+            </>
+          )}
+        </div>
+        <h1>Smart City Grievance System</h1>
+        <p>AI-Powered Grievance Management for Better Governance</p>
+      </header>
+
+      <nav className="nav">
         <Link to="/">Home</Link>
-        <Link to="/submit">Submit</Link>
-        <Link to="/track">Track</Link>
+        <Link to="/submit">Submit Grievance</Link>
+        <Link to="/track">Track Status</Link>
         <Link to="/transparency">Transparency</Link>
         <Link to="/reports">Reports</Link>
         <Link to="/escalations">Escalations</Link>
         <Link to="/departments">Departments</Link>
         <Link to="/ai-insights">AI Insights</Link>
         <Link to="/advanced-analytics">Analytics</Link>
-        {userRole === 'admin' && <Link to="/admin">Admin</Link>}
-        {token && userRole !== 'admin' && <Link to="/citizen-dashboard">My Grievances</Link>}
-      </div>
-      <div className="navbar-auth">
-        {token ? (
-          <button onClick={handleLogout} className="nav-btn logout">Logout</button>
-        ) : (
-          <>
-            <Link to="/citizen-login" className="nav-btn">Citizen Login</Link>
-            <Link to="/admin-login" className="nav-btn admin">Admin Login</Link>
-          </>
-        )}
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 
