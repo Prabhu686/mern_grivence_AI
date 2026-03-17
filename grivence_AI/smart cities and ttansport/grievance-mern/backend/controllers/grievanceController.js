@@ -81,14 +81,15 @@ exports.createGrievance = async (req, res) => {
         citizenEmail, 
         citizenPhone
       );
-      Object.assign(grievance, verification);
+      const { status: _ignoreStatus, flags, ...verificationData } = verification;
+      Object.assign(grievance, verificationData);
       
       // Log suspicious grievances
       if (!verification.isLegitimate) {
         console.log('⚠️ SUSPICIOUS GRIEVANCE DETECTED:');
         console.log(`ID: ${nextId}`);
         console.log(`Status: ${verification.status}`);
-        console.log(`Flags: ${verification.flags.join(', ')}`);
+        console.log(`Flags: ${flags ? flags.join(', ') : verification.verificationFlags}`);
       }
     } catch (verifyError) {
       console.log('Verification failed, continuing without it:', verifyError.message);
