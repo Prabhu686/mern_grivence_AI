@@ -107,7 +107,6 @@ function CitizenLogin() {
           localStorage.setItem('rememberedEmail', formData.email);
         }
 
-        alert('Login successful!');
         navigate('/citizen-dashboard');
       } catch (err) {
         setMessage(err.response?.data?.error || 'OTP verification failed');

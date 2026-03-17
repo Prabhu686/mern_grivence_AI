@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/Navbar';
 
 // Pages
 import Home from './pages/Home';
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/submit" element={<SubmitGrievance />} />
