@@ -1,7 +1,4 @@
 {
-  "buildCommand": "cd \"grivence_AI/smart cities and ttansport/grievance-mern/frontend\" && npm install && npm run build",
-  "outputDirectory": "grivence_AI/smart cities and ttansport/grievance-mern/frontend/build",
-  "installCommand": "echo skip",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
