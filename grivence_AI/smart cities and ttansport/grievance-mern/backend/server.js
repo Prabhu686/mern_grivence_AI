@@ -12,9 +12,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL, /\.onrender\.com$/]
-    : 'http://localhost:3000',
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
